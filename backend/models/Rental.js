@@ -21,6 +21,22 @@ const Rental = sequelize.define('Rental', {
         type: DataTypes.STRING,
         defaultValue: 'active',
     },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'user_id'
+        }
+    },
+    product_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: Product,
+            key: 'product_id'
+        }
+    }
 });
 
 Rental.belongsTo(User, { foreignKey: 'user_id' });

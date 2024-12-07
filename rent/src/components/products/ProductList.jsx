@@ -1,29 +1,15 @@
-import { useEffect, useState } from 'react';
-import { getAvailableProducts } from '../../services/productService';
+import React from 'react';
+import ProductCard from './ProductCard';
 
-const ProductList = () => {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getAvailableProducts();
-        setProducts(data);
-      } catch (err) {
-        console.error('Ошибка загрузки продуктов:', err);
-      }
-    };
-    fetchProducts();
-  }, []);
-
+const ProductList = ({ products, onRent }) => {
   return (
-    <div>
-      {products.map((product) => (
-        <div key={product.product_id}>
-          <h3>{product.name}</h3>
-          <p>{product.description}</p>
-          <p>{product.price_per_day} KZT/день</p>
-        </div>
+    <div className="product-list">
+      {products.map(product => (
+        <ProductCard 
+          key={product.product_id} 
+          product={product} 
+          onRent={onRent}
+        />
       ))}
     </div>
   );

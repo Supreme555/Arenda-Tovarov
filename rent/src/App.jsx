@@ -7,6 +7,7 @@ import Products from './pages/Products.jsx';
 import Admin from './pages/Admin.jsx';
 import Register from './pages/Register.jsx';
 import Rentals from './pages/Rentals.jsx';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const App = () => {
   return (
@@ -19,8 +20,22 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/rentals" element={<Rentals />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <Admin />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/rentals" 
+            element={
+              <ProtectedRoute>
+                <Rentals />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </Router>
     </AuthProvider>

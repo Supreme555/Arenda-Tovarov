@@ -18,13 +18,40 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ where: { email } });
-
+        
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Неверный email или пароль' });
         }
 
-        const token = jwt.sign({ userId: user.user_id }, process.env.SECRET_KEY, { expiresIn: '1h' });
-        res.json({ token });
+        const token = jwt.sign(
+            { 
+                userId: user.user_id,
+                role: user.role 
+            },
+            process.env.SECRET_KEY || 'your-secret-key',
+            { expiresIn: '24h' }
+        );
+
+        res.json({
+            token,
+            user: {
+                id: user.user_id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.findAll({
+            attributes: { exclude: ['password'] }
+        });
+        res.json(users);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

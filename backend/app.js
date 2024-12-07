@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const sequelize = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const rentalRoutes = require('./routes/rentalRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 // Проверка подключения к базе данных
 sequelize.authenticate()
@@ -30,11 +31,14 @@ app.use(bodyParser.json());
 // Подключение маршрутов
 app.use('/api/users', userRoutes);
 app.use('/api/rentals', rentalRoutes);
+app.use('/api/products', productRoutes);
 
 // Синхронизация базы данных и запуск сервера
-sequelize.sync().then(() => {
-    const PORT = process.env.PORT || 3000; // Используем порт из .env или 3000
-    app.listen(PORT, () => {
-        console.log(`Сервер запущен на порту ${PORT}`);
-    });
-}).catch(err => console.error('Ошибка синхронизации с базой данных:', err));
+sequelize.sync()
+    .then(() => {
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log(`Сервер запущен на порту ${PORT}`);
+        });
+    })
+    .catch(err => console.error('Ошибка синхронизации с базой данных:', err));
